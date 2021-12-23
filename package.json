@@ -1,0 +1,20 @@
+{
+  "name": "nodetiac",
+  "version": "1.0.0",
+  "description": "Sistema de controle de serviços e pedidos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Finpama",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.12.1"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.3.0"
+  }
+}
