@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "nodetiac",
   "version": "1.0.0",
   "description": "Sistema de controle de serviços e pedidos",
