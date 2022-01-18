@@ -15,10 +15,12 @@ module.exports = (sequelize, DataTypes) => {
       Pedido.belongsToMany(models.Servico,{
         through: 'ItemPedido'
       });
+      Pedido.hasMany(models.ItemPedido)
     }
   };
   Pedido.init({
-    dataPedido: DataTypes.DATEONLY
+    ClienteId: DataTypes.INTEGER,
+    dataPedido: DataTypes.DATEONLY,
   }, {
     sequelize,
     modelName: 'Pedido',

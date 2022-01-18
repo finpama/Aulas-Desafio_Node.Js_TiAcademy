@@ -12,12 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       ItemPedido.belongsTo(models.Pedido);
-      ItemPedido.belongsTo(models.Servico)
+      ItemPedido.belongsTo(models.Servico);
     }
   };
   ItemPedido.init({
+    PedidoId: DataTypes.INTEGER,
+    ServicoId: DataTypes.INTEGER,
     quantidade: DataTypes.INTEGER,
-    valor: DataTypes.FLOAT,
+    valor: DataTypes.FLOAT
   }, {
     sequelize,
     modelName: 'ItemPedido',

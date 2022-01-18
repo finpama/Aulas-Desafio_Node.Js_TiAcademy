@@ -17,57 +17,191 @@ app.get('/', function (req, res) {
 	res.send('<h1>hello world!</h1>')
 });
 
-app.post('/new/servico', async (req, res) => {
+
+
+
+app.post('/servico/novo', async (req, res) => {
 	await servico.create(req.body)
 		.then(function () {
 			return res.json({
-				"error": false,
 				"message": "(V) O serviço foi criado com sucesso"
 			})
 		})
 		.catch(function (err) {
 			return res.status(400).json({
-				"error": true,
-				"message": "(X) O serviço não foi criado"
+				"message": "(X) O serviço não foi criado",
+				"errorMessage": err
 			});
 		});
 });
 
-
-app.post('/new/cliente', async (req, res) => {
+app.post('/cliente/novo', async (req, res) => {
 	await cliente.create(req.body)
 		.then(function (err) {
 			return res.json({
-				"error": false,
 				"message": "(V) O cliente foi criado com sucesso",
 			})
 		})
 		.catch(function (err) {
 			return res.status(400).json({
-				"error": true,
 				"message": "(X) O cliente NÃO foi criado",
 				"errorMessage": err
 			});
 		});
 });
 
-app.post('/new/pedido', async (req, res) => {
+app.post('/pedido/novo', async (req, res) => {
 	await pedido.create(req.body)
 		.then(function (err) {
 			return res.json({
-				"error": false,
 				"message": "(V) O Pedido foi criado com sucesso",
 			})
 		})
 		.catch(function (err) {
 			return res.status(400).json({
-				"error": true,
 				"message": "(X) O Pedido NÃO foi criado",
 				"errorMessage": err
 			});
 		});
 });
 
+app.post('/item-pedido/novo', async (req, res) => {
+	await itemPedido.create(req.body)
+		.then(function (err) {
+			return res.json({
+				"message": "(V) O itemPedido foi criado com sucesso",
+			})
+		})
+		.catch(function (err) {
+			return res.status(400).json({
+				"message": "(X) O itemPedido NÃO foi criado",
+				"errorMessage": err
+			});
+		});
+});
+
+
+
+app.get('/servico/lista', async (req, res) => {
+	await servico.findAll({       //https://sequelize.org/master/manual/model-querying-basics.html
+		order: [['nome', 'ASC']]  //                 ------------------------>                    /\#ordering-and-grouping 
+	})
+		.then(function (servicos) {
+			res.json({ servicos })
+		});
+})
+
+app.get('/servico/quantia', async (req, res) => {
+	await servico.count('id')
+		.then(function (servicos) {
+			res.json({ servicos });
+		});
+});
+
+app.get('/servico/:id', async (req, res) => {
+	await servico.findByPk(req.params.id)
+	.then((servico) => {
+		if (servico != null) {
+			res.json({
+				"error": false,
+				servico
+			});
+		}else {
+			res.json({
+				"error": true,
+				"message": "Serviço não encontrado"
+			});
+		}
+	})
+	.catch(err => {
+		res.json({
+			"error": true,
+			"message": err
+		});
+	});
+});
+
+
+
+app.get('/cliente/lista', async (req, res) => {
+	await cliente.findAll({
+		order: [['createdAt', 'ASC']]
+	})
+		.then(function (clientes) {
+			res.json({ clientes })
+		});
+})
+
+app.get('/cliente/quantia', async (req, res) => {
+	await cliente.count('id')
+		.then(function (clientes) {
+			res.json({ clientes });
+		});
+});
+
+app.get('/cliente/:id', async (req, res) => {
+	await cliente.findByPk(req.params.id)
+	.then((cliente) => {
+		if (cliente != null) {
+			res.json({
+				"error": false,
+				cliente
+			});
+		}else {
+			res.json({
+				"error": true,
+				"message": "Cliente não encontrado"
+			});
+		}
+	})
+	.catch(err => {
+		res.json({
+			"error": true,
+			"message": err
+		});
+	});
+});
+
+
+
+app.get('/pedido/lista', async (req, res) => {
+	await pedido.findAll({
+		order: [['id', 'ASC']]
+	})
+		.then(function (pedidos) {
+			res.json({ pedidos })
+		});
+})
+
+app.get('/pedido/quantia', async (req, res) => {
+	await pedido.count('id')
+		.then(function (pedidos) {
+			res.json({ pedidos });
+		});
+});
+
+app.get('/pedido/:id', async (req, res) => {
+	await pedido.findByPk(req.params.id)
+	.then((pedido) => {
+		if (pedido != null) {
+			res.json({
+				"error": false,
+				pedido
+			});
+		}else {
+			res.json({
+				"error": true,
+				"message": "pedido não encontrado"
+			});
+		}
+	})
+	.catch(err => {
+		res.json({
+			"error": true,
+			"message": err
+		});
+	});
+});
 
 
 
