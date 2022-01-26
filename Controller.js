@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-const models = require('./models')
+const models = require('./models');
+
+const { Sequelize } = require('./models');
 
 const app = express();
 app.use(cors());
@@ -100,25 +102,25 @@ app.get('/servico/quantia', async (req, res) => {
 
 app.get('/servico/:id', async (req, res) => {
 	await servico.findByPk(req.params.id)
-	.then((servico) => {
-		if (servico != null) {
-			res.json({
-				"error": false,
-				servico
-			});
-		}else {
+		.then((servico) => {
+			if (servico != null) {
+				res.json({
+					"error": false,
+					servico
+				});
+			} else {
+				res.json({
+					"error": true,
+					"message": "Serviço não encontrado"
+				});
+			}
+		})
+		.catch(err => {
 			res.json({
 				"error": true,
-				"message": "Serviço não encontrado"
+				"message": err
 			});
-		}
-	})
-	.catch(err => {
-		res.json({
-			"error": true,
-			"message": err
 		});
-	});
 });
 
 
@@ -141,25 +143,25 @@ app.get('/cliente/quantia', async (req, res) => {
 
 app.get('/cliente/:id', async (req, res) => {
 	await cliente.findByPk(req.params.id)
-	.then((cliente) => {
-		if (cliente != null) {
-			res.json({
-				"error": false,
-				cliente
-			});
-		}else {
+		.then((cliente) => {
+			if (cliente != null) {
+				res.json({
+					"error": false,
+					cliente
+				});
+			} else {
+				res.json({
+					"error": true,
+					"message": "Cliente não encontrado"
+				});
+			}
+		})
+		.catch(err => {
 			res.json({
 				"error": true,
-				"message": "Cliente não encontrado"
+				"message": err
 			});
-		}
-	})
-	.catch(err => {
-		res.json({
-			"error": true,
-			"message": err
 		});
-	});
 });
 
 
@@ -181,26 +183,82 @@ app.get('/pedido/quantia', async (req, res) => {
 });
 
 app.get('/pedido/:id', async (req, res) => {
-	await pedido.findByPk(req.params.id)
-	.then((pedido) => {
-		if (pedido != null) {
-			res.json({
-				"error": false,
-				pedido
-			});
-		}else {
+	await pedido.findByPk(req.params.id, { include: [{ all: true }] })
+		.then((pedido) => {
+			if (pedido != null) {
+				return res.json({
+					"error": false,
+					pedido
+				});
+			} else {
+				return res.json({
+					"error": true,
+					"message": "pedido não encontrado"
+				});
+			}
+		})
+		.catch(err => {
 			res.json({
 				"error": true,
-				"message": "pedido não encontrado"
+				"message": err
 			});
-		}
-	})
-	.catch(err => {
-		res.json({
-			"error": true,
-			"message": err
 		});
-	});
+});
+
+
+app.put('/servico/atualizar', async (req, res) => {
+	await servico.update(req.body, {
+		where: { id: req.body.id }
+	})
+		.then(() => {
+			return res.json({
+				"error": false,
+				"message": "servico atualizado"
+			});
+		})
+		.catch(err => {
+			return res.status(400).json({
+				"error": true,
+				"message": err
+			});
+		});
+});
+
+app.put('/pedido/:id/atualizarItem', async (req, res) => {
+	const item = {
+		quantidade: req.body.quantidade,
+		valor: req.body.valor
+	}
+
+	if (!await pedido.findByPk(req.params.id)) {
+		return res.status(400).json({
+			"error": true,
+			"message": " O pedido não foi encotrado"
+		});
+	}
+
+	if (!await servico.findByPk(req.body.ServicoId)) {
+		return res.status(400).json({
+			"error": true,
+			"message": "O servico não foi encontrado"
+		});
+	}
+
+	res.json({"aee": "Deu bom"})
+
+	// await pedido.update(req.body, { where: { id: req.params.id } })
+	// 	.then(
+	// 		res.json({
+	// 			error: false,
+	// 			message: "O pedido foi alterado com sucesso"
+	// 		})
+	// 	)
+	// 	.catch(err => {
+	// 		res.json({
+	// 			error: true,
+	// 			message: err
+	// 		})
+	// 	})
 });
 
 
