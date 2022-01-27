@@ -84,6 +84,7 @@ app.post('/item-pedido/novo', async (req, res) => {
 
 
 
+
 app.get('/servico/lista', async (req, res) => {
 	await servico.findAll({       //https://sequelize.org/master/manual/model-querying-basics.html
 		order: [['nome', 'ASC']]  //                 ------------------------>                    /\#ordering-and-grouping 
@@ -122,7 +123,6 @@ app.get('/servico/:id', async (req, res) => {
 			});
 		});
 });
-
 
 
 app.get('/cliente/lista', async (req, res) => {
@@ -165,7 +165,6 @@ app.get('/cliente/:id', async (req, res) => {
 });
 
 
-
 app.get('/pedido/lista', async (req, res) => {
 	await pedido.findAll({
 		order: [['id', 'ASC']]
@@ -206,6 +205,8 @@ app.get('/pedido/:id', async (req, res) => {
 });
 
 
+
+
 app.put('/servico/atualizar', async (req, res) => {
 	await servico.update(req.body, {
 		where: { id: req.body.id }
@@ -244,21 +245,25 @@ app.put('/pedido/:id/atualizarItem', async (req, res) => {
 		});
 	}
 
-	res.json({"aee": "Deu bom"})
-
-	// await pedido.update(req.body, { where: { id: req.params.id } })
-	// 	.then(
-	// 		res.json({
-	// 			error: false,
-	// 			message: "O pedido foi alterado com sucesso"
-	// 		})
-	// 	)
-	// 	.catch(err => {
-	// 		res.json({
-	// 			error: true,
-	// 			message: err
-	// 		})
-	// 	})
+	await itemPedido.update(item, {
+		where: Sequelize.and(
+			{ ServicoId: req.body.ServicoId },
+			{ PedidoId: req.params.id }
+		)
+	})
+		.then(itens => {
+			res.json({
+				error: false,
+				message: "O Pedido foi alterado com sucesso",
+				itens
+			});
+		})
+		.catch(err => {
+			res.status(400).json({
+				error: true,
+				message: "Erro: Não foi possivel alterar"
+			});
+		});
 });
 
 
