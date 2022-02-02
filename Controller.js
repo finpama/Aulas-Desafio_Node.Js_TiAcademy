@@ -142,7 +142,7 @@ app.get('/cliente/quantia', async (req, res) => {
 });
 
 app.get('/cliente/:id', async (req, res) => {
-	await cliente.findByPk(req.params.id)
+	await cliente.findByPk(req.params.id, { include: [{ all: true }] })
 		.then((cliente) => {
 			if (cliente != null) {
 				res.json({
@@ -266,6 +266,23 @@ app.put('/pedido/:id/atualizarItem', async (req, res) => {
 		});
 });
 
+
+
+app.delete('/cliente/:id/excluir', async (req, res) => {
+	await cliente.destroy({ where: { id: req.params.id } })
+		.then(() => {
+			res.json({
+				error: false,
+				message: "O cliente foi excluido com sucesso"
+			});
+		})
+		.catch(err => {
+			res.status(400).json({
+				error: true,
+				message: err
+			});
+		});
+});
 
 
 let port = process.env.PORT || 3001;
