@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			Cliente.hasMany(models.Pedido, { foreignKey: 'ClienteId', as: 'cPedidos' });
+			Cliente.hasMany(models.Compra, { foreignKey: 'ClienteId', as: 'cli_Compras' });
 		}
 	};
 	Cliente.init({
