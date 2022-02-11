@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   ItemCompra.init({
-    PedidoId: DataTypes.INTEGER,
-    ServicoId: DataTypes.INTEGER,
+    CompraId: DataTypes.INTEGER,
+    ProdutoId: DataTypes.INTEGER,
     quantidade: DataTypes.INTEGER,
     valor: DataTypes.FLOAT
   }, {

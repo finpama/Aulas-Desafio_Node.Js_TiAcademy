@@ -8,6 +8,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      ClienteId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'clientes',
+          key: 'id'
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      },
       data: {
         type: Sequelize.DATE
       },
